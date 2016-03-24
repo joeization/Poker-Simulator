@@ -8,6 +8,7 @@
 #define CLUB 0
 #define HEART 2
 #define DIAMOND 1
+#define PI 3.14159265
 class card{
 private:
     GLint point;
@@ -22,7 +23,7 @@ public:
         GLfloat _midx=0,GLfloat _midy=0,GLfloat _midz=0,GLboolean _neg=0);
     card();
     ~card();
-    void draw();
+    void draw(GLint s);
     void move_x(GLint d);
     void move_z(GLint d);
     GLboolean mouse_on(GLfloat x,GLfloat y);

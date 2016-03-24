@@ -10,7 +10,7 @@ class graphic{
 
 public:
 
-    static void DrawBlankCard(GLfloat midx, GLfloat midy, GLfloat midz,GLboolean ep){
+    static void DrawBlankCard(GLfloat midx, GLfloat midy, GLfloat midz, GLboolean ep){
         glBegin(GL_QUADS);
             if(!ep)
                 glColor3f(1,1,1);
@@ -20,19 +20,18 @@ public:
             glVertex3f(-5+midx,0+midy,10+midz);
             glVertex3f(5+midx,0+midy,10+midz);
             glVertex3f(5+midx,0+midy,-10+midz);
-
         glEnd();
         glBegin(GL_LINES);
-            glColor3f(0,0,0);
             glLineWidth(100);
-            glVertex3f(-5+midx,0+midy,-10+midz);
-            glVertex3f(-5+midx,0+midy,10+midz);
-            glVertex3f(-5+midx,0+midy,10+midz);
-            glVertex3f(5+midx,0+midy,10+midz);
-            glVertex3f(5+midx,0+midy,10+midz);
-            glVertex3f(5+midx,0+midy,-10+midz);
-            glVertex3f(5+midx,0+midy,-10+midz);
-            glVertex3f(-5+midx,0+midy,-10+midz);
+            glColor3f(0,0,0);
+            glVertex3f(-5+midx,hei+midy,-10+midz);
+            glVertex3f(-5+midx,hei+midy,10+midz);
+            glVertex3f(-5+midx,hei+midy,10+midz);
+            glVertex3f(5+midx,hei+midy,10+midz);
+            glVertex3f(5+midx,hei+midy,10+midz);
+            glVertex3f(5+midx,hei+midy,-10+midz);
+            glVertex3f(5+midx,hei+midy,-10+midz);
+            glVertex3f(-5+midx,hei+midy,-10+midz);
         glEnd();
     }
 

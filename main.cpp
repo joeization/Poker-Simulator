@@ -3,7 +3,6 @@
 #pragma comment(lib, "glew32.lib")
 #pragma comment(lib, "opengl32.lib")
 using namespace std;
-#define PI 3.14159265
 #define MAXN 10
 GLint ScreenWidth = 800;
 GLint ScreenHeight = 600;
@@ -15,7 +14,7 @@ GLfloat teyex = 0;
 GLfloat teyey = 0;
 GLfloat teyez = 0;
 
-GLfloat sca = 0.02;
+GLfloat sca = 0.015;
 
 GLfloat deg = 0;
 
@@ -25,13 +24,18 @@ GLfloat fp = 1000/60;
 
 GLboolean onfocus;
 
+GLboolean swp;
+
 GLboolean mouserdown;
 GLboolean keyldown;
 GLboolean mouseldown;
 
 GLint select=-1;
 
-card deck[52];
+card deck[111];
+vector<GLint> pri;
+
+GLint siz;
 
 void processKeysDown(unsigned char key,GLint x,GLint y){
     if(!onfocus)return;
@@ -78,10 +82,11 @@ void ff(GLint a){
     if(key_buf[13]){
         keyldown=true;
         if(select==-1){
-            for(GLint i=0;i<52;i++){
-                if(deck[i].mouse_on(eyex,eyez)){
+            for(GLint i=0;i<siz;i++){
+                if(deck[pri[i]].mouse_on(eyex,eyez)){
                     select=i;
-                    deck[i].ssel();
+                    deck[pri[i]].ssel();
+                    swp=true;
                     break;
                 }
             }
@@ -89,15 +94,15 @@ void ff(GLint a){
     }
     else{
         if(select!=-1&&!mouseldown){
-            deck[select].ssel();
+            deck[pri[0]].ssel();
             select=-1;
         }
         keyldown=false;
     }
     if(key_buf[8]||key_buf[127]){
-        for(GLint i=0;i<52;i++){
-            if(deck[i].mouse_on(eyex,eyez)){
-                deck[i].svis();
+        for(GLint i=0;i<siz;i++){
+            if(deck[pri[i]].mouse_on(eyex,eyez)){
+                deck[pri[i]].svis();
                 break;
             }
         }
@@ -116,8 +121,17 @@ void RendScene() {
     glPushMatrix();
 
     if(select!=-1){
-        deck[select].move_x(eyex);
-        deck[select].move_z(eyez);
+        deck[pri[select]].move_x(eyex);
+        deck[pri[select]].move_z(eyez);
+        if(swp){
+            if(select!=0){
+                GLint t=pri[select];
+                pri.erase(pri.begin()+select);
+                pri.insert(pri.begin(),t);
+                select=0;
+            }
+            swp=false;
+        }
     }
 
     glScalef(sca,sca,sca);
@@ -125,8 +139,8 @@ void RendScene() {
     glRotatef(90,-1,0,0);
     glTranslatef(-eyex,0,-eyez);
 
-    for(GLint s=0;s<52;s++){
-        deck[s].draw();
+    for(GLint s=0;s<siz;s++){
+        deck[pri[s]].draw(s);
     }
 
     glBegin(GL_LINES);
@@ -148,9 +162,9 @@ void MouseFunc(GLint button, GLint state, GLint x, GLint y){
     else if(state == GLUT_DOWN){
         if(button == GLUT_RIGHT_BUTTON){
             mouserdown = GL_TRUE;
-            for(GLint i=0;i<52;i++){
-                if(deck[i].mouse_on(eyex,eyez)){
-                    deck[i].svis();
+            for(GLint i=0;i<siz;i++){
+                if(deck[pri[i]].mouse_on(eyex,eyez)){
+                    deck[pri[i]].svis();
                     break;
                 }
             }
@@ -158,10 +172,11 @@ void MouseFunc(GLint button, GLint state, GLint x, GLint y){
         if(button == GLUT_LEFT_BUTTON){
             mouseldown = GL_TRUE;
             if(select==-1){
-                for(GLint i=0;i<52;i++){
-                    if(deck[i].mouse_on(eyex,eyez)){
+                for(GLint i=0;i<siz;i++){
+                    if(deck[pri[i]].mouse_on(eyex,eyez)){
                         select=i;
-                        deck[i].ssel();
+                        swp=true;
+                        deck[pri[i]].ssel();
                         break;
                     }
                 }
@@ -172,7 +187,7 @@ void MouseFunc(GLint button, GLint state, GLint x, GLint y){
         if(button == GLUT_RIGHT_BUTTON) mouserdown = GL_FALSE;
         if(button == GLUT_LEFT_BUTTON){
             if(select!=-1){
-                deck[select].ssel();
+                deck[pri[0]].ssel();
                 select=-1;
             }
             mouseldown = GL_FALSE;
@@ -202,26 +217,30 @@ void ReShape(GLint w,GLint h){
     glutPostRedisplay();
 }
 
-pair<GLint, GLint> li[52];
+pair<GLint, GLint> li[111];
 
 GLint main(GLint argc, char** argv) {
 
+    srand(time(0));
+
     memset(key_buf,0,sizeof(key_buf));
 
-    for(GLint s=0;s<4;s++){
-        for(GLint i=1;i<=13;i++){
-            li[13*s+i-1]=make_pair(s,i);
+    siz=52;
+
+    for(int i=0;i<4;i++)
+        for(int j=0;j<13;j++){
+            li[i*13+j].first=i;
+            li[i*13+j].second=j+1;
+            pri.push_back(i*13+j);
         }
-    }
-    srand(time(0));
-    random_shuffle(li,li+52);
+    random_shuffle(li,li+siz);
 
     for(GLint s=0;s<4;s++){
         for(GLint i=1;i<=13;i++){
-            deck[13*s+i-1] = card(li[13*s+i-1].second,li[13*s+i-1].first,(i-7)*11,0,(s-2)*21,1);
+            deck[13*s+i-1]=card(li[13*s+i-1].second,li[13*s+i-1].first,(i-7)*11,0,(s-2)*21,1);
         }
     }
-    srand(time(0));
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(100, 100);

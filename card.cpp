@@ -13,46 +13,46 @@ card::card(GLint _point, GLint _suit,
             rp=string(t);
             vis=true;
             sel=false;
-            //reverse(rp.begin(),rp.end());
-        }
+}
 
 card::~card(){}
 
-void card::draw(){
+void card::draw(GLint s){
+    GLfloat tmidy=s*(-0.5);
     if(sel)
-        graphic::DrawBlankCard(midx,midy,midz,1);
+        graphic::DrawBlankCard(midx,tmidy,midz,1);
     else
-        graphic::DrawBlankCard(midx,midy,midz,0);
+        graphic::DrawBlankCard(midx,tmidy,midz,0);
     if(vis){
         switch(suit){
             case SPADE:
-                graphic::DrawSpade(midx,midy,midz,neg);
+                graphic::DrawSpade(midx,tmidy,midz,neg);
                 break;
             case HEART:
-                graphic::DrawHeart(midx,midy,midz,neg);
+                graphic::DrawHeart(midx,tmidy,midz,neg);
                 break;
             case CLUB:
-                graphic::DrawClub(midx,midy,midz,neg);
+                graphic::DrawClub(midx,tmidy,midz,neg);
                 break;
             case DIAMOND:
-                graphic::DrawDiamond(midx,midy,midz,neg);
+                graphic::DrawDiamond(midx,tmidy,midz,neg);
                 break;
         }
         if(point==1)
-            graphic::DrawCardAce(midx,midy,midz);
+            graphic::DrawCardAce(midx,tmidy,midz);
         else if(point==13)
-            graphic::DrawCardKing(midx,midy,midz);
+            graphic::DrawCardKing(midx,tmidy,midz);
         else if(point==12)
-            graphic::DrawCardQueen(midx,midy,midz);
+            graphic::DrawCardQueen(midx,tmidy,midz);
         else if(point==11)
-            graphic::DrawCardJack(midx,midy,midz);
+            graphic::DrawCardJack(midx,tmidy,midz);
         else{
             GLfloat dx=1.5;
             glBegin(GL_LINES);
             glColor3f(0,0,0);
             glLineWidth(100);
             for(GLint i=0;i<rp.length();i++){
-                graphic::DrawCardNum(rp[i]-'0',midx,midy,midz,i*dx);
+                graphic::DrawCardNum(rp[i]-'0',midx,tmidy,midz,i*dx);
             }
             glEnd();
         }
