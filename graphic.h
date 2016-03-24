@@ -1,6 +1,4 @@
-#include <gl/glew.h>
-#include <gl/wglew.h>
-#include <gl/freeglut.h>
+#include <gl/glut.h>
 #ifndef GRAPHIC_H
 #define GRAPHIC_H
 

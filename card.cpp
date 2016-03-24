@@ -38,9 +38,6 @@ void card::draw(){
                 graphic::DrawDiamond(midx,midy,midz,neg);
                 break;
         }
-        glBegin(GL_LINES);
-        glLineWidth(100);
-        glColor3f(0,0,0);
         if(point==1)
             graphic::DrawCardAce(midx,midy,midz);
         else if(point==13)
@@ -51,11 +48,14 @@ void card::draw(){
             graphic::DrawCardJack(midx,midy,midz);
         else{
             GLfloat dx=1.5;
+            glBegin(GL_LINES);
+            glColor3f(0,0,0);
+            glLineWidth(100);
             for(GLint i=0;i<rp.length();i++){
                 graphic::DrawCardNum(rp[i]-'0',midx,midy,midz,i*dx);
             }
+            glEnd();
         }
-        glEnd();
     }
 }
 
