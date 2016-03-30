@@ -28,5 +28,4 @@
 *.app
 
 #self
-other/
 *.bat
