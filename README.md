@@ -1,17 +1,15 @@
-#Poker-Simulator
-    still working on it
-    may be better
+# Poker-Simulator
 
-#Warning
+# Warning
 ```
 Bad Performance
 ```
 
-##Screenshots
+## Screenshots
 ### ![take1](img/1.png)
 ### ![take2](img/2.png)
 
-##Control
+## Control
 ### Move
     w,a,s,d or mouse
 ### Pick a card
